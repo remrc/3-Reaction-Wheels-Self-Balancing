@@ -2,7 +2,7 @@
 
 ESP32, MPU6050, Nidec 24H brushless motors, 500 mAh LiPo battery.
 
-Balancing controllers can be tunning remotely over bluetooth.
+Balancing controllers can be tuned remotely over bluetooth.
 
 Example:
 
