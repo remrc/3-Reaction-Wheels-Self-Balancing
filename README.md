@@ -14,7 +14,7 @@ The same for K2, K3. Send "i", "s".
 
 <img src="/pictures/3-wheel1.jpg" alt="3-Reaction-Wheels-Self-Balancing"/>
 
-<img src="/pictures/schematic.png" alt="3-Reaction-Wheels-Self-Balancing-Schematic"/>
+<img src="/pictures/Schematic.png" alt="3-Reaction-Wheels-Self-Balancing-Schematic"/>
 
 About schematic:
 
