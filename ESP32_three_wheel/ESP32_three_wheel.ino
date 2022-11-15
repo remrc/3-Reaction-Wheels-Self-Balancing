@@ -1,5 +1,6 @@
 #include "ESP32.h"
 #include <Wire.h>
+#include <EEPROM.h>
 #include "BluetoothSerial.h"
 
 BluetoothSerial SerialBT;
@@ -7,6 +8,8 @@ BluetoothSerial SerialBT;
 void setup() {
   Serial.begin(115200);
   SerialBT.begin("3-Wheel-Robot"); // Bluetooth device name
+  EEPROM.begin(EEPROM_SIZE);
+  
   pinMode(BUZZER, OUTPUT);
   pinMode(BRAKE, OUTPUT);
   digitalWrite(BRAKE, HIGH);
@@ -25,6 +28,9 @@ void setup() {
   ledcSetup(PWM3_CH, BASE_FREQ, TIMER_BIT);
   ledcAttachPin(PWM3, PWM3_CH);
   Motor3_control(0);
+  EEPROM.get(0, offsets);
+  if (offsets.ID == 34) calibrated = true;
+    else calibrated = false;
   delay(3000);
   digitalWrite(BUZZER, HIGH);
   delay(70);
@@ -44,7 +50,7 @@ void loop() {
     } else 
       Gyro_amount = 0.1;
     
-	if (vertical) {
+	if (vertical && calibrated && !calibrating) {
       digitalWrite(BRAKE, HIGH);
       gyroX = GyX / 131.0; // Convert to deg/s
       gyroY = GyY / 131.0; // Convert to deg/s
@@ -63,8 +69,11 @@ void loop() {
     previousT_1 = currentT;
   }
   
-  if (currentT - previousT_2 >= 150) {    
-    battVoltage((double)analogRead(VBAT) / 206); // need to measure
+  if (currentT - previousT_2 >= 2000) {    
+    battVoltage((double)analogRead(VBAT) / 300); // need to measure
+    if (!calibrated && !calibrating) {
+      SerialBT.println("first you need to calibrate the balancing point...");
+    }
     previousT_2 = currentT;
   }
 }

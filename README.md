@@ -36,7 +36,7 @@ You can also make this with Arduino nano controller. All other parts remain the 
 
 <img src="/pictures/arduino_schematic.png" alt="3-Reaction-Wheels-Self-Balancing-Schematic"/>
 
-In this version I make offsets setting procedure more simple. First connect to controller over bluetooth. 
+In both versions I make offsets setting procedure more simple. First connect to controller over bluetooth. 
 You will see a message that you need to calibrate the balancing point. Send c+ from serial monitor. This activate calibrating procedure. 
 Set the robot to balancing point. Hold still when the robot does not fall to either side. Send c- from serial monitor. 
 This will write the offsets to the EEPROM. After calibrating, the robot will begin to balance.

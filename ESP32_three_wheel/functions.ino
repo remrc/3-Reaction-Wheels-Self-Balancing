@@ -65,9 +65,10 @@ void angle_calc() {
   Acc_angleX = atan2(AcY, AcZ) * 57.2958;      // angle from acc. values * 57.2958 (deg/rad)
   robot_angleX = robot_angleX * Gyro_amount + Acc_angleX * (1.0 - Gyro_amount);
 
-  angleX = robot_angleX - offsetX;
-  angleY = robot_angleY - offsetY;
-  SerialBT.print(angleX); SerialBT.print(" "); SerialBT.println(angleY); // plot
+  angleX = robot_angleX - offsets.X;
+  angleY = robot_angleY - offsets.Y;
+  
+  //SerialBT.print(angleX); SerialBT.print(" "); SerialBT.println(angleY); // plot
   //SerialBT.print("AngleX: "); SerialBT.print(angleX); SerialBT.print(" AngleY: "); SerialBT.println(angleY);
   if (abs(angleX) > 8 || abs(angleY) > 8) vertical = false;
   if (abs(angleX) < 0.4 && abs(angleY) < 0.4) vertical = true;
@@ -140,7 +141,7 @@ int Tuning() {
       if (cmd == '-')    K1 -= 1;
       printValues();
       break;
-	case 'i':
+	  case 'i':
       if (cmd == '+')    K2 += 0.05;
       if (cmd == '-')    K2 -= 0.05;
       printValues();
@@ -150,6 +151,37 @@ int Tuning() {
       if (cmd == '-')    K3 -= 0.005;
       printValues();
       break;  
+    case 'c':
+      if (cmd == '+' && !calibrating) {
+        calibrating = true;
+         SerialBT.println("calibrating on");
+      }
+      if (cmd == '-' && calibrating)  {
+        SerialBT.print("X: "); SerialBT.print(robot_angleX); SerialBT.print(" Y: "); SerialBT.println(robot_angleY);
+        if (abs(robot_angleX) < 15 && abs(robot_angleY) < 15) {
+          offsets.X = robot_angleX;
+          offsets.Y = robot_angleY;
+          offsets.ID = 34;
+          EEPROM.put(0, offsets);
+          EEPROM.commit();
+          calibrated = true;
+          calibrating = false;
+          SerialBT.println("calibrating off");
+          digitalWrite(BUZZER, HIGH);
+          delay(70);
+          digitalWrite(BUZZER, LOW);
+        } else {
+          SerialBT.println("The angles are wrong!!!");
+          digitalWrite(BUZZER, HIGH);
+          delay(50);
+          digitalWrite(BUZZER, LOW);
+          delay(70);
+          digitalWrite(BUZZER, HIGH);
+          delay(50);
+          digitalWrite(BUZZER, LOW);
+        }
+      }
+      break;        
    }
 }
 

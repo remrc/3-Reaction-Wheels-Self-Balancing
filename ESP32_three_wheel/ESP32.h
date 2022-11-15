@@ -29,16 +29,26 @@
 #define accSens 0              // 0 = 2g, 1 = 4g, 2 = 8g, 3 = 16g
 #define gyroSens 1             // 0 = 250rad/s, 1 = 500rad/s, 2 1000rad/s, 3 = 2000rad/s
 
+#define EEPROM_SIZE 32
+
 float Gyro_amount = 0.1;    
 
 bool vertical = false;
+bool calibrating = false;
+bool calibrated = false;
 
 float K1 = 135;
 float K2 = 6.0;
 float K3 = 0.05;
 int loop_time = 10;
 
-float offsetX = -0.94, offsetY = 1.04;
+struct OffsetsObj {
+  int ID;
+  float X;
+  float Y;
+};
+
+OffsetsObj offsets;
 
 int16_t  AcX, AcY, AcZ, GyY, gyroY, GyX, gyroX;
 
