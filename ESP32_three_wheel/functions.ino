@@ -183,6 +183,7 @@ int Tuning() {
       }
       break;        
    }
+   return 1;
 }
 
 void printValues() {
